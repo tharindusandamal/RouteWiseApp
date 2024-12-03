@@ -1,0 +1,204 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+/* GraphUI.css */
+.graph-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f9fafb;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px auto;
+  width: 80%;
+  height: 500px;
+  position: relative;
+}
+
+.graph-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f3c88;
+  margin-bottom: 10px;
+}
+
+.graph-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.node {
+  fill: #1f3c88;
+  stroke: #1f3c88;
+  stroke-width: 2px;
+  cursor: pointer;
+  transition: fill 0.2s ease;
+}
+
+.node:hover {
+  fill: #ff7f50;
+}
+
+.edge {
+  stroke: #6c757d;
+  stroke-width: 2px;
+}
+
+.edge-highlight {
+  stroke: #ff7f50;
+  stroke-width: 3px;
+}
+
+.highlighted-path {
+  stroke: #ff7f50;
+  stroke-width: 3px;
+  transition: stroke 0.3s ease-in-out;
+}
+
+/* SearchUI.css */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #f9fafb;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 400px;
+  margin: auto;
+}
+
+.search-header {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f3c88;
+  margin-bottom: 10px;
+}
+
+.search-tagline {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.search-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.select-dropdown {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.search-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.calculate-button {
+  padding: 10px 20px;
+  background: #ff7f50;
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.calculate-button:hover {
+  background: #ff6b3b;
+}
+
+.clear-button {
+  padding: 10px 20px;
+  background: #f1f3f5;
+  color: #333;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.clear-button:hover {
+  background: #e9ecef;
+}
+
+.edge {
+  stroke: #aaa;
+  stroke-width: 2;
+}
+
+.highlighted-edge {
+  stroke: #ff5733;
+  stroke-width: 4;
+}
+
+.node {
+  fill: #4caf50;
+  stroke: #333;
+  stroke-width: 2;
+  cursor: pointer;
+}
+
+.node:hover {
+  fill: #05860b;
+}
+
+.graph-container {
+  text-align: center;
+}
+
+.graph-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.graph-svg {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+}
+
+.node {
+  stroke: black;
+  stroke-width: 1px;
+}
+
+.edge {
+  stroke: blue;
+  stroke-width: 2px;
+}
+
+.highlighted-edge {
+  stroke: orange;
+  stroke-width: 3px;
+}
