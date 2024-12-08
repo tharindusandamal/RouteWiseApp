@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using RouteWiseApp.APPLICATION.Exceptions;
 using RouteWiseApp.APPLICATION.Services;
 using RouteWiseApp.DOMAIN.DomanModels;
 using System;
@@ -18,6 +19,14 @@ namespace RouteWiseApp.INFRASTRUCTURE.Services
             _logger = logger;
         }
 
+        /// <summary>
+        /// Find shortest path
+        /// </summary>
+        /// <param name="fromNodeName"></param>
+        /// <param name="toNodeName"></param>
+        /// <param name="graphNode"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidException"></exception>
         public ShortestPathData ShortestPath(string fromNodeName, string toNodeName, List<Node> graphNode)
         {
 			try
@@ -78,9 +87,13 @@ namespace RouteWiseApp.INFRASTRUCTURE.Services
             }
 			catch (Exception ex)
 			{
+                // Add a log
                 _logger.LogError(ex.Message);
-                return null;
-			}
+
+                // Thorow an error - this will handle by exception middleware - API app
+                throw new InvalidException(ex.Message);
+
+            }
         }
     }
 }

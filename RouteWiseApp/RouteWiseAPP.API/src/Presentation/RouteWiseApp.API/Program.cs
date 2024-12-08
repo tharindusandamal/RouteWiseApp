@@ -44,6 +44,7 @@ app.UseSerilogRequestLogging();
 
 // Use log middleware
 app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Apply a global, default CORS policy
 app.UseCors(policy =>

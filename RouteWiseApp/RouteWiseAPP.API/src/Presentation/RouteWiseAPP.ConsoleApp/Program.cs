@@ -5,16 +5,7 @@ using RouteWiseApp.APPLICATION.Services;
 using RouteWiseApp.DOMAIN.DomanModels;
 using RouteWiseApp.INFRASTRUCTURE.Services;
 
-Console.WriteLine("Shortest Path Finder Console App");
-Console.WriteLine("--------------------------------");
-
-// Get input for fromNode and toNode
-Console.Write("Enter From Node: ");
-var fromNode = Console.ReadLine();
-
-Console.Write("Enter To Node: ");
-var toNode = Console.ReadLine();
-
+#region OBJECT PREPARATION
 var graphNodes = new List<Node>
 {
     new Node { Name = "A",
@@ -72,6 +63,22 @@ var graphNodes = new List<Node>
 
 ILogger<Program> _logger;
 var finder = new NodePathFinderService(null);
+#endregion
+
+Console.WriteLine("Shortest Path Finder Console App");
+
+// Display moject model 
+DisplayGraph(graphNodes);
+
+Console.WriteLine("--------------------------------");
+
+// Get input for fromNode and toNode
+Console.Write("Enter From Node: ");
+var fromNode = Console.ReadLine();
+
+Console.Write("Enter To Node: ");
+var toNode = Console.ReadLine();
+
 // Use the NodePathFinder service
 var result = finder.ShortestPath(fromNode, toNode, graphNodes);
 
@@ -85,3 +92,23 @@ else
     Console.WriteLine($"Shortest Path Distance: {result.Distance}");
     Console.WriteLine($"Path: {string.Join(" -> ", result.NodeNames)}");
 }
+
+Console.ReadLine();
+
+#region FUNTIONS
+static void DisplayGraph(List<Node> nodes)
+{
+    Console.WriteLine("Graph Representation:");
+    Console.WriteLine("----------------------");
+
+    foreach (var node in nodes)
+    {
+        Console.WriteLine($"Node {node.Name}:");
+        foreach (var edge in node.Edges)
+        {
+            Console.WriteLine($"  -> {edge.TargetNode.Name} (Weight: {edge.Weight})");
+        }
+    }
+}
+
+#endregion

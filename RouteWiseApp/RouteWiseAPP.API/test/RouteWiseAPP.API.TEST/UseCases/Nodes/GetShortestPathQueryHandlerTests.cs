@@ -26,11 +26,17 @@ namespace RouteWiseAPP.API.TEST.UseCases.Nodes
 
         public GetShortestPathQueryHandlerTests()
         {
+            // Moke object 
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _nodePathFinderMock = new Mock<INodePathFinder>();
             _loggerMock = new Mock<ILogger<GetShortesPathQueryHandler>>();
+
+            // Initialize 
             _handler = new GetShortesPathQueryHandler(_unitOfWorkMock.Object, _nodePathFinderMock.Object, _loggerMock.Object);
+
+            // Initialize nods
             InitiateNodes();
+
         }
 
         internal void InitiateNodes()
@@ -89,21 +95,12 @@ namespace RouteWiseAPP.API.TEST.UseCases.Nodes
                         new Edge { TargetNode = new Node { Name = "G" }, Weight = 5 }
                     } }
             };
+            _graphNodes = graphNodes;
         }
 
         [Fact]
         public async Task Handle_ShouldReturnShortestPath_WhenValidRequestIsProvided()
         {
-            var request = new GetShortesPathQuery
-            {
-                Request = new GetShortesPathQueryRequestDTO
-                {
-                    FromNodeName = "A",
-                    ToNodeName = "D",
-                    GraphNodes = _graphNodes
-                }
-            };
-
             // Arrange
             var query = new GetShortesPathQuery
             {
@@ -130,6 +127,33 @@ namespace RouteWiseAPP.API.TEST.UseCases.Nodes
             result.Should().NotBeNull();
             result.Distance.Should().Be(6);
             result.NodeNames.Should().BeEquivalentTo(new List<string> { "A", "B", "F" });
+        }
+
+        [Fact]
+        public async Task Handle_ShouldReturnShortestPath_WhenInvalidRequestIsProvided()
+        {
+            // Arrange
+            var query = new GetShortesPathQuery
+            {
+                Request = new GetShortesPathQueryRequestDTO
+                {
+                    FromNodeName = "A",
+                    ToNodeName = "Z",
+                    GraphNodes = _graphNodes
+                }
+            };
+
+            _nodePathFinderMock
+            .Setup(n => n.ShortestPath(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<Node>>()))
+            .Returns(new ShortestPathData ());
+
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Distance.Should().Be(0);
+            result.NodeNames.Should().BeEquivalentTo(new List<string> { });
         }
     }
 }
