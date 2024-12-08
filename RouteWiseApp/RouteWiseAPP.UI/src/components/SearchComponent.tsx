@@ -4,9 +4,10 @@ import { ParentNode, ShortestPathResponse } from "../types/GraphTypes";
 interface SearchComponentProps {
   graphData: ParentNode[];
   onCalculate: (fromNode: string, toNode: string) => void;
+  onClear: () => void;
 }
 
-const SearchComponent: React.FC<SearchComponentProps> = ({ graphData, onCalculate }) => {
+const SearchComponent: React.FC<SearchComponentProps> = ({ graphData, onCalculate, onClear }) => {
   const [fromNode, setFromNode] = useState<string>("");
   const [toNode, setToNode] = useState<string>("");
 
@@ -21,14 +22,20 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ graphData, onCalculat
   const handleClear = () => {
     setFromNode("");
     setToNode("");
+    onClear();
   };
 
   return (
-    <div className="search-container">
-      <h2>Select Path</h2>
-      <div>
-        <label>From Node:</label>
-        <select value={fromNode} onChange={(e) => setFromNode(e.target.value)}>
+    <div>
+      <h4 className="mb-4">Select Path</h4>
+      <div className="mb-3">
+        <label className="form-label">From Node</label>
+        <select
+          className="form-select"
+          id="fromNode"
+          value={fromNode}
+          onChange={(e) => setFromNode(e.target.value)}
+        >
           <option value="">Select Node</option>
           {graphData.map((node) => (
             <option key={node.name} value={node.name}>
@@ -37,9 +44,14 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ graphData, onCalculat
           ))}
         </select>
       </div>
-      <div>
-        <label>To Node:</label>
-        <select value={toNode} onChange={(e) => setToNode(e.target.value)}>
+      <div className="mb-3">
+        <label className="form-label">To Node</label>
+        <select
+          className="form-select"
+          id="toNode"
+          value={toNode}
+          onChange={(e) => setToNode(e.target.value)}
+        >
           <option value="">Select Node</option>
           {graphData.map((node) => (
             <option key={node.name} value={node.name}>
@@ -48,8 +60,22 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ graphData, onCalculat
           ))}
         </select>
       </div>
-      <button onClick={handleCalculate}>Calculate</button>
-      <button onClick={handleClear}>Clear</button>
+      <div className="d-flex gap-2">
+        <button
+          onClick={handleClear}
+          type="reset"
+          className="btn btn-outline-danger"
+        >
+          Clear
+        </button>
+        <button
+          onClick={handleCalculate}
+          type="button"
+          className="btn btn-custom"
+        >
+          <i className="bi bi-calculator"></i> Calculate
+        </button>
+      </div>
     </div>
   );
 };

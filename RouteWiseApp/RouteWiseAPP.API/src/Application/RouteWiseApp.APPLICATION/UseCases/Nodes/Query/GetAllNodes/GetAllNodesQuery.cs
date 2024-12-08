@@ -21,8 +21,9 @@ namespace RouteWiseApp.APPLICATION.UseCases.Nodes.Query.GetAllNodes
 
         public async Task<IEnumerable<Node>> Handle(GetAllNodesQuery request, CancellationToken cancellationToken)
         {
+            // Get all nodes
             var data = await _unitOfWork.Nodes.GetNodesAsync();
-
+            // Return
             return data;
         }
     }

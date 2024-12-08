@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { ParentNode, GraphComponentProps, ShortestPathResponse } from '../types/GraphTypes';
-import '../index.css';
+import React, { useEffect, useState } from "react";
+import { ParentNode, GraphComponentProps, ShortestPathResponse } from "../types/GraphTypes";
+import "../index.css";
 
 const GraphComponent: React.FC<GraphComponentProps> = ({ graphData, shortestPath }) => {
-  const [nodePositions, setNodePositions] = useState<{ [key: string]: { x: number; y: number } }>({});
+  const [nodePositions, setNodePositions] = useState<{ [key: string]: { x: number; y: number };}>({});
 
   useEffect(() => {
     // Manually set node positions to match the provided graph layout
@@ -22,62 +22,87 @@ const GraphComponent: React.FC<GraphComponentProps> = ({ graphData, shortestPath
   }, []);
 
   return (
-    <div className="graph-container">
-      <h2 className="graph-title">Graph Visualization</h2>
-      <svg className="graph-svg" width={500} height={300}>
-        <defs>
-          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" />
-          </marker>
-        </defs>
+    <div>
+      <div className="p-3 border rounded bg-light">
+        <div >
+          <h2 className="graph-title">Graph Visualization</h2>
+          <svg className="graph-svg" width={500} height={200}>
+            <defs>
+              <marker id="arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="10"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon points="0 0, 10 3.5, 0 7" />
+              </marker>
+            </defs>
 
-        {/* Render edges */}
-        {graphData.map((node) =>
-          node.edges.map((edge, index) => {
-            const fromPosition = nodePositions[node.name];
-            const toPosition = nodePositions[edge.targetNode.name];
+            {/* Render edges */}
+            {graphData.map((node) =>
+              node.edges.map((edge, index) => {
+                const fromPosition = nodePositions[node.name];
+                const toPosition = nodePositions[edge.targetNode.name];
 
-            if (!fromPosition || !toPosition) return null;
+                if (!fromPosition || !toPosition) return null;
 
-            const isPathHighlighted =
-              shortestPath.nodeNames.includes(node.name) && shortestPath.nodeNames.includes(edge.targetNode.name);
+                const isPathHighlighted =
+                  shortestPath.nodeNames.includes(node.name) &&
+                  shortestPath.nodeNames.includes(edge.targetNode.name);
 
-            return (
-              <g key={`${node.name}-${edge.targetNode.name}-${index}`}>
-                <line
-                  x1={fromPosition.x}
-                  y1={fromPosition.y}
-                  x2={toPosition.x}
-                  y2={toPosition.y}
-                  className={`edge ${isPathHighlighted ? 'highlighted-edge' : ''}`}
-                  stroke={isPathHighlighted ? 'orange' : 'blue'}
-                  strokeWidth={2}
-                  markerEnd="url(#arrowhead)"
+                return (
+                  <g key={`${node.name}-${edge.targetNode.name}-${index}`}>
+                    <line
+                      x1={fromPosition.x}
+                      y1={fromPosition.y}
+                      x2={toPosition.x}
+                      y2={toPosition.y}
+                      className={`edge ${
+                        isPathHighlighted ? "highlighted-edge" : ""
+                      }`}
+                      stroke={isPathHighlighted ? "orange" : "blue"}
+                      strokeWidth={2}
+                      markerEnd="url(#arrowhead)"
+                    />
+                    <text
+                      x={(fromPosition.x + toPosition.x) / 2}
+                      y={(fromPosition.y + toPosition.y) / 2 - 5}
+                      fill="black"
+                      fontSize="12"
+                      textAnchor="middle"
+                    >
+                      {edge.weight}
+                    </text>
+                  </g>
+                );
+              })
+            )}
+
+            {/* Render nodes */}
+            {Object.entries(nodePositions).map(([nodeName, position]) => (
+              <g key={nodeName}>
+                <circle
+                  cx={position.x}
+                  cy={position.y}
+                  r={20}
+                  className="node"
+                  fill="lightblue"
                 />
                 <text
-                  x={(fromPosition.x + toPosition.x) / 2}
-                  y={(fromPosition.y + toPosition.y) / 2 - 5}
+                  x={position.x}
+                  y={position.y + 5}
                   fill="black"
                   fontSize="12"
                   textAnchor="middle"
                 >
-                  {edge.weight}
+                  {nodeName}
                 </text>
               </g>
-            );
-          })
-        )}
-
-        {/* Render nodes */}
-        {Object.entries(nodePositions).map(([nodeName, position]) => (
-          <g key={nodeName}>
-            <circle cx={position.x} cy={position.y} r={20} className="node" fill="lightblue" />
-            <text x={position.x} y={position.y + 5} fill="black" fontSize="12" textAnchor="middle">
-              {nodeName}
-            </text>
-          </g>
-        ))}
-      </svg>
+            ))}
+          </svg>
+        </div>
+      </div>
     </div>
   );
 };

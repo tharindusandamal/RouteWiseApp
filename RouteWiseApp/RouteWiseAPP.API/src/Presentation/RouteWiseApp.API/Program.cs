@@ -1,35 +1,49 @@
 using Microsoft.AspNetCore.Hosting;
+using RouteWiseApp.API.Middlewares;
 using RouteWiseApp.APPLICATION.Repositories;
 using RouteWiseApp.APPLICATION.Services;
 using RouteWiseApp.APPLICATION.UseCases;
 using RouteWiseApp.DOMAIN.AppModels;
 using RouteWiseApp.INFRASTRUCTURE.Repositories;
 using RouteWiseApp.INFRASTRUCTURE.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Inject mock data
 builder.Services.Configure<MockData>(builder.Configuration.GetSection("MockData"));
 
-// Inject DI
-builder.Services.AddScoped<INodeRepository, NodeRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<INodePathFinder, NodePathFinder>();
+// Inject DI - Add services to the container
+builder.Services.AddDependencies();
 
+// Add mediator
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
     cfg.RegisterServicesFromAssembly(typeof(UseCaseBase).Assembly);
 });
 
+// Add logs - Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("logs/api-log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 var app = builder.Build();
+
+// Configure logs
+app.UseSerilogRequestLogging();
+
+// Use log middleware
+app.UseMiddleware<LoggingMiddleware>();
 
 // Apply a global, default CORS policy
 app.UseCors(policy =>

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using RouteWiseApp.APPLICATION.Repositories;
 using RouteWiseApp.APPLICATION.Services;
 using RouteWiseApp.DOMAIN.DomanModels;
@@ -18,10 +19,12 @@ namespace RouteWiseApp.APPLICATION.UseCases.Nodes.Query.GetShortesPath
     public class GetShortesPathQueryHandler : NodeUseCaseBase, IRequestHandler<GetShortesPathQuery, GetShortesPathQueryResponseDTO>
     {
         protected readonly INodePathFinder _nodePathFinder;
+        protected readonly ILogger<GetShortesPathQueryHandler> _logger;
 
-        public GetShortesPathQueryHandler(IUnitOfWork unitOfWork, INodePathFinder nodePathFinder) : base(unitOfWork)
+        public GetShortesPathQueryHandler(IUnitOfWork unitOfWork, INodePathFinder nodePathFinder, ILogger<GetShortesPathQueryHandler> logger) : base(unitOfWork)
         {
             _nodePathFinder = nodePathFinder;
+            _logger = logger;
         }
 
         public async Task<GetShortesPathQueryResponseDTO> Handle(GetShortesPathQuery request, CancellationToken cancellationToken)
@@ -41,7 +44,11 @@ namespace RouteWiseApp.APPLICATION.UseCases.Nodes.Query.GetShortesPath
             // find the path
             var result = _nodePathFinder.ShortestPath(request.Request.FromNodeName, request.Request.ToNodeName, request.Request.GraphNodes.ToList());
 
-            return new GetShortesPathQueryResponseDTO { Distance = result.Distance, NodeNames = result.NodeNames };
+            // retun result
+            if (result == null)
+                return new GetShortesPathQueryResponseDTO { Distance = 0, NodeNames = new List<string> { } };
+            else
+                return new GetShortesPathQueryResponseDTO { Distance = result.Distance, NodeNames = result.NodeNames };
         }
     }
 }
