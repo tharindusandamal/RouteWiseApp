@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  AZURE_WEBAPP_NAME: routewiseapp-api-dkf9echbgpb3a7b8
+  AZURE_WEBAPP_NAME: routewiseapp-api-dkf9echbgpb3a7b8.centralus-01
   AZURE_WEBAPP_PACKAGE_PATH: "./RouteWiseApp/RouteWiseAPP.API/publish"
 
 jobs:
