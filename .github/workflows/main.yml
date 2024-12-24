@@ -6,6 +6,10 @@ on:
     branches: 
       - main
 
+env:
+  AZURE_WEBAPP_NAME: routewiseapp-api-dkf9echbgpb3a7b8
+  AZURE_WEBAPP_PACKAGE_PATH: "./RouteWiseApp/RouteWiseAPP.API/publish"
+
 jobs:
   publish: 
     runs-on: ubuntu-latest
@@ -25,5 +29,12 @@ jobs:
         run: dotnet build ./RouteWiseApp/RouteWiseAPP.API/RouteWiseApp.sln --configuration Release --no-restore 
 
       - name: Publish
-        run: dotnet publish ./RouteWiseApp/RouteWiseAPP.API/RouteWiseApp.sln --configuration Release --no-build
+        run: dotnet publish ./RouteWiseApp/RouteWiseAPP.API/RouteWiseApp.sln --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+
+      - name: Deployment
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: "${{ AZURE_WEBAPP_PACKAGE_PATH }}"
       
